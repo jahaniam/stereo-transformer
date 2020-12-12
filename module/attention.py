@@ -33,7 +33,7 @@ class MultiheadAttentionRelative(nn.MultiheadAttention):
 
         return attn
 
-    def forward(self, query, key, value, need_weights=True, attn_mask=None, pos_enc=None, pos_indexes=None):
+    def forward(self, query, key, value, attn_mask=None, pos_enc=None, pos_indexes=None):
         tgt_len, bsz, embed_dim = query.size()
         head_dim = embed_dim // self.num_heads
         assert head_dim * self.num_heads == embed_dim, "embed_dim must be divisible by num_heads"
@@ -65,6 +65,16 @@ class MultiheadAttentionRelative(nn.MultiheadAttention):
                 if _b is not None:
                     _b = _b[_start:]
                 k, v = F.linear(key, _w, _b).chunk(2, dim=-1)
+        else:
+            print("none of the previous cases met, diagnosing")
+            print("nan in query:", torch.any(torch.isnan(query)))
+            print("nan in key:", torch.any(torch.isnan(key)))
+            print("nan in value:", torch.any(torch.isnan(value)))
+            # TODO: for debugging only
+            torch.save(query, 'debug_query.dat')
+            torch.save(key, 'debug_key.dat')
+            torch.save(value, 'debug_value.dat')
+            raise ValueError("Bug in attention module")
 
         # project to find q_r, k_r
         if pos_enc is not None:

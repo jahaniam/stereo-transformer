@@ -62,6 +62,8 @@ class RegressionHead(nn.Module):
             norm[norm < 0.1] = 1.0
         else:
             norm[occ_mask, :] = 1.0  # set occluded region norm to be 1.0 to avoid division by 0
+            # TODO: for debugging only
+            # norm[norm < 0.1] = 1.0
 
         # re-normalize to 1
         attn_weight_rw = attn_weight_rw / norm  # re-sum to 1
