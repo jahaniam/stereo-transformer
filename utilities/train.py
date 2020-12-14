@@ -46,7 +46,11 @@ def train_one_epoch(model: torch.nn.Module, data_loader: Iterable, optimizer: to
 
         # clip norm
         if max_norm > 0:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
+            total_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
+            if torch.isnan(total_norm):
+                print('gradient nan, skipping current step')
+                torch.cuda.empty_cache()
+                continue
 
         # step optimizer
         optimizer.step()
