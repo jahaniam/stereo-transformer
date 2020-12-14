@@ -61,7 +61,6 @@ class RegressionHead(nn.Module):
         if occ_mask is not None:
             norm[occ_mask, :] = 1.0  # set occluded region norm to be 1.0 to avoid division by 0
         norm[norm < 0.1] = 1.0
-        print("debugging norm", norm.max().item(), norm.min().item())
 
         # re-normalize to 1
         attn_weight_rw = attn_weight_rw / norm  # re-sum to 1
@@ -243,7 +242,6 @@ class RegressionHead(nn.Module):
         else:
             # softmax
             attn_ot = self._softmax(attn_weight)
-        output['attn_ot'] = attn_ot
 
         # compute relative response (RR) at ground truth location
         if x.disp is not None:

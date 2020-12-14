@@ -66,15 +66,7 @@ class MultiheadAttentionRelative(nn.MultiheadAttention):
                     _b = _b[_start:]
                 k, v = F.linear(key, _w, _b).chunk(2, dim=-1)
         else:
-            print("none of the previous cases met, diagnosing")
-            print("nan in query:", torch.any(torch.isnan(query)))
-            print("nan in key:", torch.any(torch.isnan(key)))
-            print("nan in value:", torch.any(torch.isnan(value)))
-            # TODO: for debugging only
-            torch.save(query, 'debug_query.dat')
-            torch.save(key, 'debug_key.dat')
-            torch.save(value, 'debug_value.dat')
-            raise ValueError("Bug in attention module")
+            raise ValueError("nan in query/value/key")
 
         # project to find q_r, k_r
         if pos_enc is not None:
