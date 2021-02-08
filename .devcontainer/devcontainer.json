@@ -1,0 +1,33 @@
+{
+	"name": "tensorflow-semseg",
+	"build": { 
+		"context": ".",
+		"dockerfile": "Dockerfile",
+		"args": {
+		}
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"jupyter.alwaysTrustNotebooks": true
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python","ms-toolsai.jupyter"
+	],
+	"runArgs": [
+		"--gpus=all","-e", "DISPLAY=${env:DISPLAY}",
+		"-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+		"-v", "${env:HOME}/.Xauthority:/.Xauthority:ro"
+	  ],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [8888],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "python --version",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "avidbots"
+}
